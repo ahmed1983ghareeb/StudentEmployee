@@ -95,15 +95,17 @@ String flag = "a";
                 if(flag.equals("s")) {
                     Student s = new Student(editTextName.getText().toString(), Integer.valueOf(editTextAge.getText().toString()),
                             editTextId.getText().toString(), editTextProgram.getText().toString());
-                    addStudent(s);
+                    //addStudent(s);
+                    personArrayList.add(s);
                     personArrayAdapter.notifyDataSetChanged();
-                    studentArrayAdapter.notifyDataSetChanged();
+                    refreshStudents();
                 }else if(flag.equals("e")){
                     Employee e = new Employee(editTextName.getText().toString(),Integer.valueOf(editTextAge.getText().toString()),
                             editTextId.getText().toString(),editTextJob.getText().toString(),Double.valueOf(editTextSalary.getText().toString()));
-                    addEmployee(e);
+                    //addEmployee(e);
+                    personArrayList.add(e);
                     personArrayAdapter.notifyDataSetChanged();
-                    employeeArrayAdapter.notifyDataSetChanged();
+                    refreshEmployees();
             }
                 break;
             case R.id.studentBtn:
@@ -140,23 +142,36 @@ String flag = "a";
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (personArrayList.get(position).getClass().equals(Student.class)){
-            Student s = (Student)personArrayList.get(position).getObject();
-            setStudent(s);
-        }else if (personArrayList.get(position).getClass().equals(Employee.class)){
-            Employee e = (Employee) personArrayList.get(position).getObject();
-            setEmployee(e);
+        switch (flag)
+        {
+            case "a":
+                if (personArrayList.get(position).getClass().equals(Student.class)){
+                    Student s = (Student)personArrayList.get(position).getObject();
+                    setStudent(s);
+                }else if (personArrayList.get(position).getClass().equals(Employee.class)){
+                    Employee e = (Employee)personArrayList.get(position).getObject();
+                    setEmployee(e);
+                }break;
+            case "s":
+                Student s = studentsList.get(position);
+                setStudent(s);
+                break;
+            case "e":
+                Employee e = employeesList.get(position);
+                setEmployee(e);
+                break;
         }
+
     }
 
     private void setEmployee(Employee e) {
         String name = e.getName();
         String salary = String.valueOf(e.getSalary());
-        String employyId = e.getEmployyId();
+        String employeeId = e.getEmployyId();
         int age = e.getAge();
         String jobTitle = e.getTitle();
         editTextName.setText(name);
-        editTextId.setText(employyId);
+        editTextId.setText(employeeId);
         editTextAge.setText(String.valueOf(age));
         editTextSalary.setText(salary);
         editTextJob.setText(jobTitle);
@@ -197,6 +212,27 @@ String flag = "a";
 
     }
 
+    public void refreshStudents()
+    {
+        studentsList.clear();
+        for(int i = 0; i<personArrayList.size();i++){
+            if(personArrayList.get(i).getClass().equals(Student.class)){
+                studentsList.add((Student)personArrayList.get(i));
+            }
+        }
+        studentArrayAdapter.notifyDataSetChanged();
+    }
+
+    public void refreshEmployees()
+    {
+        employeesList.clear();
+        for(int i = 0; i<personArrayList.size();i++){
+            if(personArrayList.get(i).getClass().equals(Employee.class)){
+                employeesList.add((Employee)personArrayList.get(i));
+            }
+        }
+        employeeArrayAdapter.notifyDataSetChanged();
+    }
     public void clearText(){
         editTextId.setText("");
         editTextName.setText("");
