@@ -22,5 +22,8 @@ public class Person {
         return age;
     }
 
+public Object getObject(){
+        return null;
+}
 
 }

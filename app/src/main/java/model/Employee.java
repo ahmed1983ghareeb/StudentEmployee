@@ -28,4 +28,9 @@ public class Employee extends Person {
     public String toString() {
         return name;
     }
+
+    @Override
+    public Object getObject() {
+        return this;
+    }
 }

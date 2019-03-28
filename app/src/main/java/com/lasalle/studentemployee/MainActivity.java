@@ -140,34 +140,21 @@ String flag = "a";
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        int index = position;
-
-        if (flag.equals("a") && personArrayList.get(position).getClass().equals(Student.class)){
-            for(int i = 0;i<studentsList.size();i++){
-                if (studentsList.get(i).getName().equals(personArrayList.get(position).getName()))
-                    index = i;
-            }
-            getStudent(index);
-        }else if (flag.equals("a") && personArrayList.get(position).getClass().equals(Employee.class)){
-            for(int i = 0;i<employeesList.size();i++){
-                if ( employeesList.get(i).getName().equals(personArrayList.get(position).getName()))
-                    index = i;
-            }
-            getEmployee(index);
-        }else if (flag.equals("s"))
-            getStudent(position);
-        else if (flag.equals("e"))
-            getEmployee(position);
-
-
+        if (personArrayList.get(position).getClass().equals(Student.class)){
+            Student s = (Student)personArrayList.get(position).getObject();
+            setStudent(s);
+        }else if (personArrayList.get(position).getClass().equals(Employee.class)){
+            Employee e = (Employee) personArrayList.get(position).getObject();
+            setEmployee(e);
+        }
     }
 
-    private void getEmployee(int index) {
-        String name = employeesList.get(index).getName();
-        String salary = String.valueOf(employeesList.get(index).getSalary());
-        String employyId = employeesList.get(index).getEmployyId();
-        int age = employeesList.get(index).getAge();
-        String jobTitle = employeesList.get(index).getTitle();
+    private void setEmployee(Employee e) {
+        String name = e.getName();
+        String salary = String.valueOf(e.getSalary());
+        String employyId = e.getEmployyId();
+        int age = e.getAge();
+        String jobTitle = e.getTitle();
         editTextName.setText(name);
         editTextId.setText(employyId);
         editTextAge.setText(String.valueOf(age));
@@ -175,11 +162,11 @@ String flag = "a";
         editTextJob.setText(jobTitle);
     }
 
-    public void getStudent(int index){
-        String name = studentsList.get(index).getName();
-        String program = studentsList.get(index).getProgram();
-        String studentId = studentsList.get(index).getStudentId();
-        int age = studentsList.get(index).getAge();
+    public void setStudent(Student s){
+        String name = s.getName();
+        String program = s.getProgram();
+        String studentId = s.getStudentId();
+        int age = s.getAge();
         editTextName.setText(name);
         editTextId.setText(studentId);
         editTextAge.setText(String.valueOf(age));
@@ -232,4 +219,5 @@ String flag = "a";
         employeesList.add(e);
 
     }
+
 }

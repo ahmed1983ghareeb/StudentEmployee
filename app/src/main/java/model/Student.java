@@ -23,5 +23,8 @@ public class Student extends Person {
         return program;
     }
 
-
+    @Override
+    public Object getObject() {
+        return this;
+    }
 }
