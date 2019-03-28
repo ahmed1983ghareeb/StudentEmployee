@@ -107,6 +107,7 @@ String flag = "a";
             }
                 break;
             case R.id.studentBtn:
+                clearText();
                 editTextJob.setVisibility(EditText.INVISIBLE);
                 editTextSalary.setVisibility(EditText.INVISIBLE);
                 editTextProgram.setVisibility(EditText.VISIBLE);
@@ -115,7 +116,8 @@ String flag = "a";
                 flag = "s";
                 break;
             case R.id.employeBtn:
-               editTextProgram.setVisibility(EditText.INVISIBLE);
+                clearText();
+                editTextProgram.setVisibility(EditText.INVISIBLE);
                 editTextJob.setVisibility(EditText.VISIBLE);
                 editTextSalary.setVisibility(EditText.VISIBLE);
                 employeeArrayAdapter = new ArrayAdapter<>(this,R.layout.one_item,employeesList);
@@ -123,6 +125,7 @@ String flag = "a";
                 flag = "e";
                 break;
             case R.id.allBtn:
+                clearText();
                 editTextJob.setVisibility(EditText.VISIBLE);
                 editTextSalary.setVisibility(EditText.VISIBLE);
                 editTextProgram.setVisibility(EditText.VISIBLE);
@@ -207,23 +210,15 @@ String flag = "a";
 
     }
 
-    public void setStudentsList(ArrayList<Person> personList){
+    public void clearText(){
+        editTextId.setText("");
+        editTextName.setText("");
+        editTextAge.setText("");
+        editTextSalary.setText("");
+        editTextJob.setText("");
+        editTextProgram.setText("");
+    }
 
-//        String name;
-//        String program;
-//        String studentId;
-//        int age;
-//        for(int i = 0; i < personList.size();i++)
-//        {
-//            name = personList.get(i).getName();
-//            program = personList.get(i).getProgram();
-//            studentId = personList.get(i).getStudentId();
-//            age = personList.get(i).getAge();
-//            studentsList.add(new Student(name,age,studentId,program));
-//        }
-//
-//        listView.setAdapter(studentArrayAdapter);
-      }
 
       public void addStudent(Student s)
       {
