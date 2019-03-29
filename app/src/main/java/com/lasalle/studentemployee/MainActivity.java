@@ -55,7 +55,7 @@ String flag = "a";
         editTextSalary = findViewById(R.id.editTextSalary);
         editTextJob = findViewById(R.id.editTextTitle);
         editTextProgram = findViewById(R.id.editTextProgram);
-
+        textViewTitle = findViewById(R.id.textViewTitle);
         allBtn =findViewById(R.id.allBtn);
         employeeBtn = findViewById(R.id.employeBtn);
         studentBtn = findViewById(R.id.studentBtn);
@@ -109,6 +109,7 @@ String flag = "a";
             }
                 break;
             case R.id.studentBtn:
+                textViewTitle.setText("List of Students");
                 clearText();
                 editTextJob.setVisibility(EditText.INVISIBLE);
                 editTextSalary.setVisibility(EditText.INVISIBLE);
@@ -118,6 +119,7 @@ String flag = "a";
                 flag = "s";
                 break;
             case R.id.employeBtn:
+                textViewTitle.setText("List of Employees");
                 clearText();
                 editTextProgram.setVisibility(EditText.INVISIBLE);
                 editTextJob.setVisibility(EditText.VISIBLE);
@@ -127,6 +129,7 @@ String flag = "a";
                 flag = "e";
                 break;
             case R.id.allBtn:
+                textViewTitle.setText("List of All");
                 clearText();
                 editTextJob.setVisibility(EditText.VISIBLE);
                 editTextSalary.setVisibility(EditText.VISIBLE);
