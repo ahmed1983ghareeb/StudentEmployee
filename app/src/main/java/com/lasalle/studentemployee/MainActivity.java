@@ -203,8 +203,27 @@ String flag = "a";
 
         switch (which){
             case Dialog.BUTTON_POSITIVE:
-                personArrayList.remove(currentPosition);
-                personArrayAdapter.notifyDataSetChanged();
+                switch (flag)
+                {
+                    case "a":
+                        if (personArrayList.get(currentPosition).getClass().equals(Student.class)) {
+                            personArrayList.remove(currentPosition);
+                            personArrayAdapter.notifyDataSetChanged();
+                            refreshStudents();
+                        }else if (personArrayList.get(currentPosition).getClass().equals(Employee.class)) {
+                            personArrayList.remove(currentPosition);
+                            personArrayAdapter.notifyDataSetChanged();
+                            refreshEmployees();
+            }
+                        break;
+                    case "s":
+                       removeStudent(studentsList.get(currentPosition));
+                        break;
+                    case "e":
+                        removeEmployee(employeesList.get(currentPosition));
+                        break;
+                }
+
                 break;
             case Dialog.BUTTON_NEGATIVE:
                 break;
@@ -212,6 +231,25 @@ String flag = "a";
 
     }
 
+    public void removeStudent(Student s){
+        for(int i = 0; i<personArrayList.size();i++){
+            if(personArrayList.get(i).getObject().equals(s)){
+                personArrayList.remove(i);
+            }
+        }
+        personArrayAdapter.notifyDataSetChanged();
+        refreshStudents();
+    }
+
+    public void removeEmployee(Employee e){
+        for(int i = 0; i<personArrayList.size();i++){
+            if(personArrayList.get(i).getObject().equals(e)){
+                personArrayList.remove(i);
+            }
+        }
+        personArrayAdapter.notifyDataSetChanged();
+        refreshEmployees();
+    }
     public void refreshStudents()
     {
         studentsList.clear();
@@ -220,6 +258,7 @@ String flag = "a";
                 studentsList.add((Student)personArrayList.get(i));
             }
         }
+        if(!studentsList.isEmpty())
         studentArrayAdapter.notifyDataSetChanged();
     }
 
@@ -231,6 +270,7 @@ String flag = "a";
                 employeesList.add((Employee)personArrayList.get(i));
             }
         }
+        if(!employeesList.isEmpty())
         employeeArrayAdapter.notifyDataSetChanged();
     }
     public void clearText(){
