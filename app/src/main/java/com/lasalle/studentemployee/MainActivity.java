@@ -95,14 +95,12 @@ String flag = "a";
                 if(flag.equals("s")) {
                     Student s = new Student(editTextName.getText().toString(), Integer.valueOf(editTextAge.getText().toString()),
                             editTextId.getText().toString(), editTextProgram.getText().toString());
-                    //addStudent(s);
                     personArrayList.add(s);
                     personArrayAdapter.notifyDataSetChanged();
                     refreshStudents();
                 }else if(flag.equals("e")){
                     Employee e = new Employee(editTextName.getText().toString(),Integer.valueOf(editTextAge.getText().toString()),
                             editTextId.getText().toString(),editTextJob.getText().toString(),Double.valueOf(editTextSalary.getText().toString()));
-                    //addEmployee(e);
                     personArrayList.add(e);
                     personArrayAdapter.notifyDataSetChanged();
                     refreshEmployees();
@@ -213,17 +211,21 @@ String flag = "a";
                             personArrayList.remove(currentPosition);
                             personArrayAdapter.notifyDataSetChanged();
                             refreshStudents();
+                            clearText();
                         }else if (personArrayList.get(currentPosition).getClass().equals(Employee.class)) {
                             personArrayList.remove(currentPosition);
                             personArrayAdapter.notifyDataSetChanged();
                             refreshEmployees();
+                            clearText();
             }
                         break;
                     case "s":
                        removeStudent(studentsList.get(currentPosition));
+                       clearText();
                         break;
                     case "e":
                         removeEmployee(employeesList.get(currentPosition));
+                        clearText();
                         break;
                 }
 
