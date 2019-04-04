@@ -12,11 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import model.Employee;
+import model.FileManager;
 import model.Person;
 import model.Student;
 
@@ -65,11 +67,7 @@ String flag = "a";
         employeeBtn.setOnClickListener(this);
         allBtn.setOnClickListener(this);
 
-        Student s = new Student("Student1", 34,
-                "1",  "Mobile science");
-        Employee e = new Employee("Employee1",40,"1","Scrum master",100000.00);
-        addStudent(s);
-        addEmployee(e);
+        personArrayList = FileManager.readFile(this,"person.txt");
 
         listView = findViewById(R.id.list);
 
@@ -93,17 +91,17 @@ String flag = "a";
         switch (v.getId()){
             case R.id.saveBtn:
                 if(flag.equals("s")) {
-                    Student s = new Student(editTextName.getText().toString(), Integer.valueOf(editTextAge.getText().toString()),
+                    Student s = new Student("S",editTextName.getText().toString(), Integer.valueOf(editTextAge.getText().toString()),
                             editTextId.getText().toString(), editTextProgram.getText().toString());
                     personArrayList.add(s);
                     personArrayAdapter.notifyDataSetChanged();
-                    refreshStudents();
+
                 }else if(flag.equals("e")){
-                    Employee e = new Employee(editTextName.getText().toString(),Integer.valueOf(editTextAge.getText().toString()),
+                    Employee e = new Employee("E",editTextName.getText().toString(),Integer.valueOf(editTextAge.getText().toString()),
                             editTextId.getText().toString(),editTextJob.getText().toString(),Double.valueOf(editTextSalary.getText().toString()));
                     personArrayList.add(e);
                     personArrayAdapter.notifyDataSetChanged();
-                    refreshEmployees();
+
             }
                 break;
             case R.id.studentBtn:
@@ -112,18 +110,28 @@ String flag = "a";
                 editTextJob.setVisibility(EditText.INVISIBLE);
                 editTextSalary.setVisibility(EditText.INVISIBLE);
                 editTextProgram.setVisibility(EditText.VISIBLE);
-                studentArrayAdapter = new ArrayAdapter<>(this,R.layout.one_item,studentsList);
-                listView.setAdapter(studentArrayAdapter);
+
+                personArrayList = filterPerson("S");
+                personArrayAdapter.clear();
+                personArrayAdapter.addAll(personArrayList);
+                Toast.makeText(this,String.valueOf(personArrayAdapter.getCount()),Toast.LENGTH_SHORT).show();
+                personArrayAdapter.notifyDataSetChanged();
                 flag = "s";
                 break;
+
             case R.id.employeBtn:
                 textViewTitle.setText("List of Employees");
                 clearText();
-                editTextProgram.setVisibility(EditText.INVISIBLE);
-                editTextJob.setVisibility(EditText.VISIBLE);
-                editTextSalary.setVisibility(EditText.VISIBLE);
-                employeeArrayAdapter = new ArrayAdapter<>(this,R.layout.one_item,employeesList);
-                listView.setAdapter(employeeArrayAdapter);
+                editTextJob.setVisibility(EditText.INVISIBLE);
+                editTextSalary.setVisibility(EditText.INVISIBLE);
+                editTextProgram.setVisibility(EditText.VISIBLE);
+
+                personArrayList = filterPerson("E");
+                personArrayAdapter.clear();
+                personArrayAdapter.addAll(personArrayList);
+                Toast.makeText(this,String.valueOf(personArrayAdapter.getCount()),Toast.LENGTH_SHORT).show();
+                personArrayAdapter.notifyDataSetChanged();
+
                 flag = "e";
                 break;
             case R.id.allBtn:
@@ -132,8 +140,12 @@ String flag = "a";
                 editTextJob.setVisibility(EditText.VISIBLE);
                 editTextSalary.setVisibility(EditText.VISIBLE);
                 editTextProgram.setVisibility(EditText.VISIBLE);
-                //personArrayAdapter = new ArrayAdapter<>(this,R.layout.one_item,studentsList);
-                listView.setAdapter(personArrayAdapter);
+
+                personArrayList = getPersonArrayList();
+                personArrayAdapter.clear();
+                personArrayAdapter.addAll(personArrayList);
+                Toast.makeText(this,String.valueOf(personArrayAdapter.getCount()),Toast.LENGTH_SHORT).show();
+                personArrayAdapter.notifyDataSetChanged();
                 flag = "a";
                 break;
         }
@@ -146,23 +158,47 @@ String flag = "a";
         switch (flag)
         {
             case "a":
-                if (personArrayList.get(position).getClass().equals(Student.class)){
+                if (personArrayList.get(position).getType().equals("S")){
+                    clearText();
                     Student s = (Student)personArrayList.get(position).getObject();
                     setStudent(s);
-                }else if (personArrayList.get(position).getClass().equals(Employee.class)){
+                }else if (personArrayList.get(position).getType().equals("E")){
+                    clearText();
                     Employee e = (Employee)personArrayList.get(position).getObject();
                     setEmployee(e);
                 }break;
             case "s":
-                Student s = studentsList.get(position);
+                clearText();
+                Student s = (Student)personArrayList.get(position).getObject();
                 setStudent(s);
                 break;
             case "e":
-                Employee e = employeesList.get(position);
+                clearText();
+                Employee e = (Employee)personArrayList.get(position).getObject();
                 setEmployee(e);
                 break;
         }
 
+    }
+
+    public ArrayList<Person> getPersonArrayList(){
+        ArrayList<Person> list = new ArrayList<>();
+        for(Person person: Person.getList())
+        list.add(person);
+        return list;
+
+
+    }
+    public ArrayList<Person> filterPerson(String type){
+
+       ArrayList<Person> filteredList = new ArrayList<>();
+        for (Person person: Person.getList()) {
+            if (person.getType().equals(type)) {
+                filteredList.add(person);
+            }
+        }
+
+       return filteredList;
     }
 
     private void setEmployee(Employee e) {
@@ -188,6 +224,7 @@ String flag = "a";
         editTextAge.setText(String.valueOf(age));
         editTextProgram.setText(program);
     }
+
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -204,31 +241,14 @@ String flag = "a";
 
         switch (which){
             case Dialog.BUTTON_POSITIVE:
-                switch (flag)
-                {
-                    case "a":
-                        if (personArrayList.get(currentPosition).getClass().equals(Student.class)) {
-                            personArrayList.remove(currentPosition);
-                            personArrayAdapter.notifyDataSetChanged();
-                            refreshStudents();
-                            clearText();
-                        }else if (personArrayList.get(currentPosition).getClass().equals(Employee.class)) {
-                            personArrayList.remove(currentPosition);
-                            personArrayAdapter.notifyDataSetChanged();
-                            refreshEmployees();
-                            clearText();
-            }
-                        break;
-                    case "s":
-                       removeStudent(studentsList.get(currentPosition));
-                       clearText();
-                        break;
-                    case "e":
-                        removeEmployee(employeesList.get(currentPosition));
-                        clearText();
-                        break;
-                }
 
+                personArrayList.get(currentPosition).removeObject();
+                personArrayList = getPersonArrayList();
+                personArrayAdapter.notifyDataSetChanged();
+                personArrayAdapter.clear();
+                personArrayAdapter.addAll(personArrayList);
+                Toast.makeText(this,String.valueOf(personArrayAdapter.getCount()),Toast.LENGTH_SHORT).show();
+                clearText();
                 break;
             case Dialog.BUTTON_NEGATIVE:
                 break;
@@ -236,48 +256,7 @@ String flag = "a";
 
     }
 
-    public void removeStudent(Student s){
-        for(int i = 0; i<personArrayList.size();i++){
-            if(personArrayList.get(i).getObject().equals(s)){
-                personArrayList.remove(i);
-            }
-        }
-        personArrayAdapter.notifyDataSetChanged();
-        refreshStudents();
-    }
 
-    public void removeEmployee(Employee e){
-        for(int i = 0; i<personArrayList.size();i++){
-            if(personArrayList.get(i).getObject().equals(e)){
-                personArrayList.remove(i);
-            }
-        }
-        personArrayAdapter.notifyDataSetChanged();
-        refreshEmployees();
-    }
-    public void refreshStudents()
-    {
-        studentsList.clear();
-        for(int i = 0; i<personArrayList.size();i++){
-            if(personArrayList.get(i).getClass().equals(Student.class)){
-                studentsList.add((Student)personArrayList.get(i));
-            }
-        }
-        if(!studentsList.isEmpty())
-        studentArrayAdapter.notifyDataSetChanged();
-    }
-
-    public void refreshEmployees()
-    {
-        employeesList.clear();
-        for(int i = 0; i<personArrayList.size();i++){
-            if(personArrayList.get(i).getClass().equals(Employee.class)){
-                employeesList.add((Employee)personArrayList.get(i));
-            }
-        }
-        if(!employeesList.isEmpty())
-        employeeArrayAdapter.notifyDataSetChanged();
-    }
     public void clearText(){
         editTextId.setText("");
         editTextName.setText("");
@@ -285,20 +264,6 @@ String flag = "a";
         editTextSalary.setText("");
         editTextJob.setText("");
         editTextProgram.setText("");
-    }
-
-
-      public void addStudent(Student s)
-      {
-          personArrayList.add(s);
-          studentsList.add(s);
-
-      }
-    public void addEmployee(Employee e)
-    {
-        personArrayList.add(e);
-        employeesList.add(e);
-
     }
 
 }

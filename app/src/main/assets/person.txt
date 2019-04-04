@@ -1,0 +1,10 @@
+E,David,25,E001,Programmer,1520.5
+E,Lui,24,E002,Product manager,1520.5
+E,Ahmed,45,E003,Developer,1520.5
+E,Wiliam,35,E004,Scrum Master,1520.5
+E,Sara,27,E005,Developer,1520.5
+S,Maria,18,S001,DEC
+S,Marlon,20,S002,AEC
+S,Denis,25,S003,AES
+S,Ajay,23,S004,DEC
+S,Hatem,18,S005,DEC
